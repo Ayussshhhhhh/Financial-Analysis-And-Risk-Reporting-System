@@ -1,0 +1,35 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 1250 >>
+stream
+BT /F1 15 Tf 40 750 Td (CREDIT RISK SCORECARD & VALIDATION REPORT) Tj ET
+BT /F1 9 Tf 40 732 Td (Financial Analytics & Risk Reporting System - Executive Board Pack) Tj ET
+BT /F1 10 Tf 40 700 Td (Scorecard Development & Risk Validation Summary) Tj ET
+BT /F1 10 Tf 40 680 Td (--------------------------------------------------------------------------------) Tj ET
+BT /F1 10 Tf 40 660 Td (Model: Logistic Regression on WOE Binned Predictors) Tj ET
+BT /F1 10 Tf 40 640 Td (Target: Binary Default [Charged Off / Default vs. Fully Paid]) Tj ET
+BT /F1 10 Tf 40 620 Td (Evaluation Sample: 2,260,701 total loans analyzed) Tj ET
+BT /F1 10 Tf 40 600 Td (ROC-AUC: 0.6910 [Benchmark: >= 0.65 PASSED]) Tj ET
+BT /F1 10 Tf 40 580 Td (Gini Coefficient: 0.3821 [Benchmark: >= 0.30 PASSED]) Tj ET
+BT /F1 10 Tf 40 560 Td (Kolmogorov-Smirnov [KS]: 0.2763 [Benchmark: >= 0.25 PASSED]) Tj ET
+BT /F1 10 Tf 40 540 Td (Precision: 0.4939 | Recall: 0.0607) Tj ET
+BT /F1 10 Tf 40 520 Td (--------------------------------------------------------------------------------) Tj ET
+BT /F1 10 Tf 40 500 Td (Scaling Parameters: Base Score = 600, Base Odds = 50:1, PDO = 20 pts) Tj ET
+BT /F1 10 Tf 40 480 Td (Cutoffs: Low [>=650], Medium [600-649], High [550-599], Very High [<550]) Tj ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000244 00000 n 
+0000000000 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+400
+%%EOF

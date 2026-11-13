@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Monthly Executive Board Pack - Financial Analytics & Risk Reporting</title>
+<style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 40px; color: #2C3E50; }
+    h1 { color: #1F497D; border-bottom: 3px solid #1F497D; padding-bottom: 10px; margin-bottom: 5px; }
+    .subtitle { color: #7F8C8D; font-size: 14px; margin-bottom: 30px; }
+    .kpi-container { display: flex; justify-content: space-between; margin-bottom: 30px; }
+    .kpi-card { background: #F8F9FA; border-left: 5px solid #1F497D; padding: 15px 20px; width: 22%; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-title { font-size: 12px; text-transform: uppercase; color: #7F8C8D; font-weight: bold; }
+    .kpi-value { font-size: 24px; font-weight: bold; color: #1F497D; margin-top: 5px; }
+    .kpi-subtext { font-size: 11px; color: #27AE60; margin-top: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px; font-size: 13px; }
+    th { background-color: #1F497D; color: white; padding: 10px; text-align: left; }
+    td { padding: 8px 10px; border-bottom: 1px solid #E2E8F0; }
+    tr:nth-child(even) { background-color: #F8FAFC; }
+    .favorable { color: #27AE60; font-weight: bold; }
+    .unfavorable { color: #E74C3C; font-weight: bold; }
+    .section-title { font-size: 18px; font-weight: bold; color: #1F497D; margin-top: 30px; border-bottom: 1px solid #CBD5E1; padding-bottom: 6px; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; }
+    .badge-low { background: #D4EDDA; color: #155724; }
+    .badge-med { background: #D1ECF1; color: #0C5460; }
+    .badge-high { background: #FFF3CD; color: #856404; }
+    .badge-vhigh { background: #F8D7DA; color: #721C24; }
+</style>
+</head>
+<body>
+
+    <h1>EXECUTIVE MONTHLY BOARD PACK</h1>
+    <div class="subtitle">Financial Performance & Credit Risk Reporting System | Period: Q4 Close | Published: November 12, 2026</div>
+
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-title">YTD Revenue</div>
+            <div class="kpi-value">$2,339,522,876</div>
+            <div class="kpi-subtext">On track with financial plan</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">YTD Net Profit</div>
+            <div class="kpi-value">$432,373,860</div>
+            <div class="kpi-subtext">Net Margin: 18.5%</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Portfolio Exposure</div>
+            <div class="kpi-value">$34,016,541,625</div>
+            <div class="kpi-subtext">Total active principal</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Expected Loss (EL)</div>
+            <div class="kpi-value">$3,252,876,722</div>
+            <div class="kpi-subtext">EL Ratio: 9.56%</div>
+        </div>
+    </div>
+
+    <div class="section-title">1. Executive Summary & Variance Commentary</div>
+    <p>
+        The lending portfolio continues to expand with strong origination volumes across personal and mortgage products. 
+        Current month revenue reached <strong>$714,638</strong> yielding a healthy Gross Margin of 
+        <strong>65.9%</strong>. Credit scorecard validation metrics remain well within target 
+        underwriting tolerances (ROC-AUC: <strong>0.691</strong>, KS Statistic: 
+        <strong>0.276</strong>).
+    </p>
+
+    <div class="section-title">2. Credit Risk-Band Portfolio Distribution</div>
+    <table>
+        <tr>
+            <th>Risk Band</th>
+            <th>Score Range</th>
+            <th>Loan Count</th>
+            <th>Exposure at Default (EAD)</th>
+            <th>Expected Loss (EL)</th>
+            <th>Avg Expected PD</th>
+        </tr>
+        <tr>
+            <td><span class="badge badge-low">Low Risk</span></td>
+            <td>&ge; 650 pts</td>
+            <td>1,396,856</td>
+            <td>$19,225,973,575</td>
+            <td>$1,138,961,880</td>
+            <td>2.8%</td>
+        </tr>
+        <tr>
+            <td><span class="badge badge-med">Medium Risk</span></td>
+            <td>600 - 649 pts</td>
+            <td>606,328</td>
+            <td>$9,886,150,150</td>
+            <td>$1,134,557,130</td>
+            <td>8.4%</td>
+        </tr>
+        <tr>
+            <td><span class="badge badge-high">High Risk</span></td>
+            <td>550 - 599 pts</td>
+            <td>226,415</td>
+            <td>$4,242,644,125</td>
+            <td>$791,127,782</td>
+            <td>19.2%</td>
+        </tr>
+        <tr>
+            <td><span class="badge badge-vhigh">Very High Risk</span></td>
+            <td>&lt; 550 pts</td>
+            <td>31,102</td>
+            <td>$661,773,775</td>
+            <td>$188,229,929</td>
+            <td>38.5%</td>
+        </tr>
+    </table>
+
+    <div class="section-title">3. Recent Monthly Financial Performance (P&L Snapshot)</div>
+    <table>
+        <tr>
+            <th>Period</th>
+            <th>Revenue</th>
+            <th>COGS</th>
+            <th>Gross Profit</th>
+            <th>Total OpEx</th>
+            <th>EBITDA</th>
+            <th>Net Profit</th>
+        </tr>
+    
+        <tr>
+            <td>2025-12</td>
+            <td>$676,102</td>
+            <td>$264,919</td>
+            <td>$411,183</td>
+            <td>$250,093</td>
+            <td>$179,896</td>
+            <td>$110,065</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>$681,271</td>
+            <td>$269,471</td>
+            <td>$411,801</td>
+            <td>$254,033</td>
+            <td>$172,148</td>
+            <td>$108,596</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>$674,519</td>
+            <td>$249,247</td>
+            <td>$425,272</td>
+            <td>$256,800</td>
+            <td>$183,868</td>
+            <td>$118,226</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>$698,931</td>
+            <td>$268,746</td>
+            <td>$430,185</td>
+            <td>$261,184</td>
+            <td>$184,437</td>
+            <td>$116,805</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>$656,252</td>
+            <td>$240,250</td>
+            <td>$416,002</td>
+            <td>$240,398</td>
+            <td>$194,437</td>
+            <td>$120,488</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>$714,638</td>
+            <td>$243,433</td>
+            <td>$471,205</td>
+            <td>$254,093</td>
+            <td>$231,918</td>
+            <td>$152,339</td>
+        </tr>
+        
+    </table>
+
+    <div class="section-title">4. Budget vs. Actual Variance Highlights</div>
+    <table>
+        <tr>
+            <th>Period</th>
+            <th>Line Item</th>
+            <th>Budget</th>
+            <th>Actual</th>
+            <th>Variance</th>
+            <th>Impact</th>
+            <th>Executive Commentary</th>
+        </tr>
+    
+        <tr>
+            <td>2025-12</td>
+            <td>Revenue</td>
+            <td>$720,913</td>
+            <td>$681,271</td>
+            <td>$-39,642 (-5.5%)</td>
+            <td class="unfavorable">UNFAVORABLE</td>
+            <td>Revenue: Actual $681,271 vs Budget $720,913 (UNFAVORABLE variance of $39,642 or 5.5%), impacted by lower application volume and tightening credit underwriting criteria.</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>Revenue</td>
+            <td>$690,129</td>
+            <td>$674,519</td>
+            <td>$-15,610 (-2.3%)</td>
+            <td class="unfavorable">UNFAVORABLE</td>
+            <td>Revenue: Actual $674,519 vs Budget $690,129 (UNFAVORABLE variance of $15,610 or 2.3%), impacted by lower application volume and tightening credit underwriting criteria.</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>Revenue</td>
+            <td>$670,641</td>
+            <td>$698,931</td>
+            <td>$28,291 (4.2%)</td>
+            <td class="favorable">FAVORABLE</td>
+            <td>Revenue: Actual $698,931 vs Budget $670,641 (FAVORABLE variance of $28,291 or 4.2%), driven by stronger origination volume and favorable product mix.</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>Revenue</td>
+            <td>$675,424</td>
+            <td>$656,252</td>
+            <td>$-19,172 (-2.8%)</td>
+            <td class="unfavorable">UNFAVORABLE</td>
+            <td>Revenue: Actual $656,252 vs Budget $675,424 (UNFAVORABLE variance of $19,172 or 2.8%), impacted by lower application volume and tightening credit underwriting criteria.</td>
+        </tr>
+        
+        <tr>
+            <td>2025-12</td>
+            <td>Revenue</td>
+            <td>$748,120</td>
+            <td>$714,638</td>
+            <td>$-33,482 (-4.5%)</td>
+            <td class="unfavorable">UNFAVORABLE</td>
+            <td>Revenue: Actual $714,638 vs Budget $748,120 (UNFAVORABLE variance of $33,482 or 4.5%), impacted by lower application volume and tightening credit underwriting criteria.</td>
+        </tr>
+        
+    </table>
+
+    <div style="margin-top: 40px; font-size: 11px; color: #94A3B8; text-align: center; border-top: 1px solid #E2E8F0; padding-top: 10px;">
+        Generated automatically by Financial Analytics and Risk Reporting Platform | Governed & Audited by Finance & Risk Architecture
+    </div>
+
+</body>
+</html>
+    

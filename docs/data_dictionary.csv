@@ -1,0 +1,117 @@
+table_name,column_name,data_type,description,source,transformation_rule,null_handling,example_value
+fact_loan_performance,loan_id,VARCHAR(20),Unique identifier for each loan record,Lending Club CSV,Cast to string; strip whitespace,NOT NULL — reject row if missing,LC-1234567
+fact_loan_performance,borrower_id,VARCHAR(20),Unique identifier for the borrower linked to dim_customer,Lending Club CSV,Derived as 'BRW-' + member_id from source,NOT NULL — reject row if missing,BRW-9087654
+fact_loan_performance,loan_amnt,DECIMAL(12 2),Total loan amount requested by the borrower in USD,Lending Club CSV,Cast to DECIMAL(12 2); multiply by 1 to drop trailing spaces,NOT NULL — default 0 if missing (flag in audit log),15000.00
+fact_loan_performance,funded_amnt,DECIMAL(12 2),Actual amount funded by investors in USD,Lending Club CSV,Cast to DECIMAL(12 2),NOT NULL — default to loan_amnt if missing,14500.00
+fact_loan_performance,term,VARCHAR(10),Loan repayment term in months (36 or 60 months),Lending Club CSV,Strip ' months' suffix; keep integer string,NOT NULL — default '36' if missing,36
+fact_loan_performance,int_rate,DECIMAL(6 4),Annual interest rate on the loan as a decimal fraction,Lending Club CSV,Strip '%' suffix; divide by 100; cast to DECIMAL(6 4),NOT NULL — reject row if missing,0.1299
+fact_loan_performance,installment,DECIMAL(10 2),Monthly payment amount in USD,Lending Club CSV,Cast to DECIMAL(10 2),NOT NULL — recalculate from loan_amnt/term/int_rate if missing,487.65
+fact_loan_performance,grade,CHAR(1),Lending Club assigned loan grade from A (best) to G (worst),Lending Club CSV,Uppercase; validate in set A B C D E F G,NOT NULL — reject row if missing,C
+fact_loan_performance,sub_grade,VARCHAR(2),Lending Club sub-grade refining the loan grade (e.g. C3),Lending Club CSV,Uppercase; validate pattern [A-G][1-5],NOT NULL — derive from grade + '3' if missing,C3
+fact_loan_performance,annual_inc,DECIMAL(14 2),Self-reported annual income of the borrower in USD,Lending Club CSV,Cast to DECIMAL; cap outliers at 99th percentile (1200000),NULL allowed — impute with median income for grade,72000.00
+fact_loan_performance,dti,DECIMAL(6 3),Debt-to-income ratio excluding mortgage as a percentage,Lending Club CSV,Cast to DECIMAL(6 3); winsorise at 60.0,NULL allowed — impute with median DTI for grade,18.450
+fact_loan_performance,issue_date,DATE,Date the loan was funded and issued,Lending Club CSV,Parse 'Mon-YYYY' format to ISO date YYYY-MM-01,NOT NULL — reject row if missing,2018-06-01
+fact_loan_performance,loan_status,VARCHAR(50),Current status of the loan (e.g. Fully Paid; Charged Off; Current),Lending Club CSV,Capitalise; trim whitespace; validate against allowed list,NOT NULL — reject row if missing,Fully Paid
+fact_loan_performance,default_flag,SMALLINT,Binary flag: 1 if loan is in default or charged off; 0 otherwise,Derived,CASE WHEN loan_status IN ('Default' 'Charged Off') THEN 1 ELSE 0 END,NOT NULL — always derivable from loan_status,0
+fact_loan_performance,pd_estimate,DECIMAL(8 6),Probability of Default estimate from scorecard model (0–1),scorecard.py output,Logistic regression score; clipped to [0.0001; 0.9999],NOT NULL — model always produces a score,0.034500
+fact_loan_performance,lgd_assumption,DECIMAL(6 4),Loss Given Default assumption (percentage of EAD lost),scorecard.py / risk config,Lookup from dim_risk_band by grade; range 0.35–0.75,NOT NULL — from risk band config,0.550000
+fact_loan_performance,ead,DECIMAL(12 2),Exposure at Default: outstanding balance at time of default,Derived,funded_amnt minus total_pymnt up to default date; min 0,NOT NULL — computed field,8750.00
+fact_loan_performance,expected_loss,DECIMAL(12 2),Expected Loss = PD × LGD × EAD in USD,Derived,pd_estimate * lgd_assumption * ead; rounded to 2dp,NOT NULL — computed from pd/lgd/ead,166.69
+fact_loan_performance,risk_band,VARCHAR(20),Risk classification band assigned by the scorecard model,scorecard.py output,Lookup from dim_risk_band using pd_estimate range,NOT NULL — always assigned,Medium Risk
+fact_loan_performance,revolving_bal,DECIMAL(14 2),Total current revolving balance across all credit lines in USD,Lending Club CSV,Cast to DECIMAL(14 2); cap at 99th percentile,NULL allowed — set to 0 if missing,12340.00
+fact_loan_performance,revol_util,DECIMAL(6 3),Revolving line utilisation rate as a percentage,Lending Club CSV,Strip '%'; cast to DECIMAL(6 3); clip to [0; 100],NULL allowed — impute with grade median,53.200
+fact_loan_performance,delinq_2yrs,SMALLINT,Number of delinquencies in the past 2 years,Lending Club CSV,Cast to INTEGER; cap at 20,NULL allowed — impute with 0,1
+fact_loan_performance,total_pymnt,DECIMAL(14 2),Total amount paid to date including principal and interest in USD,Lending Club CSV,Cast to DECIMAL(14 2),NOT NULL — set to 0 if missing,18234.56
+fact_loan_performance,total_rec_int,DECIMAL(14 2),Total interest received to date in USD,Lending Club CSV,Cast to DECIMAL(14 2),NOT NULL — set to 0 if missing,3234.56
+fact_general_ledger,transaction_id,VARCHAR(30),Unique identifier for each double-entry ledger transaction,Synthetic Ledger Generator,Format 'TXN-YYYYMMDD-NNNNNN'; zero-padded sequence,NOT NULL — reject row if missing,TXN-20240115-000423
+fact_general_ledger,account_id,INTEGER,Foreign key to dim_account identifying the nominal account,Synthetic Ledger Generator,Cast to INTEGER; validate FK against dim_account,NOT NULL — reject row if missing,1010
+fact_general_ledger,department_id,INTEGER,Foreign key to dim_department for cost centre allocation,Synthetic Ledger Generator,Cast to INTEGER; validate FK against dim_department,NOT NULL — default to 9999 (Unallocated),201
+fact_general_ledger,date_id,INTEGER,Foreign key to dim_date in YYYYMMDD integer format,Synthetic Ledger Generator,Date formatted as YYYYMMDD integer; validate FK,NOT NULL — reject row if missing,20240115
+fact_general_ledger,actual_amount,DECIMAL(14 2),Net transaction amount in USD (positive = debit; negative = credit),Synthetic Ledger Generator,Sum of debit_amount minus credit_amount,NOT NULL — computed field,4500.00
+fact_general_ledger,budget_amount,DECIMAL(14 2),Budgeted amount for the same account/period combination in USD,Budget Excel Files,Joined from fact_budget_actual on account_id + date_id,NULL allowed — 0 if no budget line exists,4000.00
+fact_general_ledger,debit_amount,DECIMAL(14 2),Gross debit side of the double-entry transaction in USD,Synthetic Ledger Generator,Cast to DECIMAL(14 2); must be >= 0,NOT NULL — 0 if credit-only transaction,4500.00
+fact_general_ledger,credit_amount,DECIMAL(14 2),Gross credit side of the double-entry transaction in USD,Synthetic Ledger Generator,Cast to DECIMAL(14 2); must be >= 0,NOT NULL — 0 if debit-only transaction,0.00
+fact_general_ledger,fiscal_month,SMALLINT,Fiscal month number (1–12) derived from transaction date,Derived,EXTRACT(MONTH FROM transaction_date),NOT NULL — derived from date,1
+fact_general_ledger,fiscal_year,SMALLINT,Fiscal year (e.g. 2024) derived from transaction date,Derived,EXTRACT(YEAR FROM transaction_date),NOT NULL — derived from date,2024
+fact_general_ledger,account_type,VARCHAR(20),Type of nominal account: Asset; Liability; Equity; Revenue; Expense,dim_account lookup,Joined from dim_account on account_id,NOT NULL — from dimension,Revenue
+fact_general_ledger,account_name,VARCHAR(100),Human-readable name of the nominal account,dim_account lookup,Joined from dim_account on account_id,NOT NULL — from dimension,Interest Income
+fact_budget_actual,budget_id,VARCHAR(30),Unique identifier for each budget line entry,Budget Excel Files,Derived as 'BDG-' + account_id + '-' + date_id,NOT NULL — computed key,BDG-5010-202401
+fact_budget_actual,account_id,INTEGER,Foreign key to dim_account for the budgeted account,Budget Excel Files,Cast to INTEGER; validate FK against dim_account,NOT NULL — reject row if missing,5010
+fact_budget_actual,department_id,INTEGER,Foreign key to dim_department for departmental budget split,Budget Excel Files,Cast to INTEGER; validate FK against dim_department,NOT NULL — reject row if missing,301
+fact_budget_actual,date_id,INTEGER,Foreign key to dim_date in YYYYMMDD format (first day of month),Budget Excel Files,Normalise to month-start date as YYYYMM01 integer,NOT NULL — reject row if missing,20240101
+fact_budget_actual,budget_amount,DECIMAL(14 2),Planned budget amount for the account/department/period in USD,Budget Excel Files,Cast to DECIMAL; annuals divided by 12 for monthly,NOT NULL — reject row if missing,120000.00
+fact_budget_actual,actual_amount,DECIMAL(14 2),Actual spend or revenue for the period joined from fact_general_ledger,Derived from fact_general_ledger,SUM(actual_amount) grouped by account_id + department_id + date_id,NOT NULL — 0 if no actuals posted,135670.00
+fact_budget_actual,variance,DECIMAL(14 2),Absolute variance: actual_amount minus budget_amount in USD,Derived,actual_amount - budget_amount; negative = adverse,NOT NULL — computed field,15670.00
+fact_budget_actual,variance_pct,DECIMAL(8 4),Variance as a percentage of budget_amount,Derived,(variance / NULLIF(budget_amount 0)) * 100; rounded 4dp,NULL if budget_amount is 0,13.0583
+fact_credit_application,application_id,VARCHAR(30),Unique identifier for each credit application event,Lending Club CSV,Derived as 'APP-' + loan_id,NOT NULL — computed key,APP-LC-1234567
+fact_credit_application,borrower_id,VARCHAR(20),Foreign key to dim_customer representing the applicant,Lending Club CSV,Derived as 'BRW-' + member_id,NOT NULL — reject row if missing,BRW-9087654
+fact_credit_application,loan_id,VARCHAR(20),Foreign key to fact_loan_performance,Lending Club CSV,Cast to string; strip whitespace,NOT NULL — reject row if missing,LC-1234567
+fact_credit_application,application_date,DATE,Date the credit application was submitted,Lending Club CSV,Parse 'Mon-YYYY' format to YYYY-MM-01,NOT NULL — reject row if missing,2018-05-01
+fact_credit_application,credit_score,SMALLINT,FICO credit score of the applicant at time of application,Lending Club CSV,Cast to INTEGER; validate range 300–850,NULL allowed — impute with grade midpoint FICO,692
+fact_credit_application,employment_length,VARCHAR(10),Applicant's stated employment length (e.g. '5 years' or '< 1 year'),Lending Club CSV,Standardise to integer years; '< 1 year' = 0; '10+ years' = 10,NULL allowed — impute with 0,5
+fact_credit_application,home_ownership,VARCHAR(20),Applicant's home ownership status: RENT; OWN; MORTGAGE; OTHER,Lending Club CSV,Uppercase; validate against allowed set,NOT NULL — default 'OTHER' if missing,MORTGAGE
+fact_credit_application,verification_status,VARCHAR(30),Income verification status: Not Verified; Source Verified; Verified,Lending Club CSV,Capitalise; validate against allowed set,NOT NULL — default 'Not Verified' if missing,Source Verified
+fact_credit_application,purpose,VARCHAR(50),Stated purpose of the loan (e.g. debt_consolidation; home_improvement),Lending Club CSV,Lowercase; replace spaces with underscore; validate list,NOT NULL — default 'other' if missing,debt_consolidation
+fact_balance_sheet,balance_id,VARCHAR(30),Unique identifier for each balance sheet entry,Derived,Composite key: account_id + '-' + date_id,NOT NULL — computed key,1010-20240131
+fact_balance_sheet,account_id,INTEGER,Foreign key to dim_account for the balance sheet line,Derived from fact_general_ledger,Aggregated from general ledger by account,NOT NULL — reject row if missing,1010
+fact_balance_sheet,date_id,INTEGER,Foreign key to dim_date representing the balance sheet date (month-end),Derived,Last calendar day of the month as YYYYMMDD,NOT NULL — reject row if missing,20240131
+fact_balance_sheet,opening_balance,DECIMAL(14 2),Account balance at the start of the period in USD,Derived,Prior period closing_balance; zero for first period,NOT NULL — 0 for opening period,145000.00
+fact_balance_sheet,closing_balance,DECIMAL(14 2),Account balance at end of the period in USD,Derived,opening_balance + SUM(actual_amount for period),NOT NULL — computed field,152300.00
+fact_balance_sheet,movement,DECIMAL(14 2),Net change in balance during the period: closing minus opening in USD,Derived,closing_balance - opening_balance,NOT NULL — computed field,7300.00
+dim_date,date_id,INTEGER,Surrogate key in YYYYMMDD integer format,Generated,Python date range; format as int YYYYMMDD,NOT NULL — primary key,20240115
+dim_date,full_date,DATE,Full calendar date in ISO-8601 format,Generated,Python date object cast to ISO string,NOT NULL,2024-01-15
+dim_date,year,SMALLINT,Four-digit calendar year,Generated,EXTRACT(YEAR FROM full_date),NOT NULL,2024
+dim_date,quarter,SMALLINT,Calendar quarter (1–4),Generated,EXTRACT(QUARTER FROM full_date),NOT NULL,1
+dim_date,month,SMALLINT,Calendar month number (1–12),Generated,EXTRACT(MONTH FROM full_date),NOT NULL,1
+dim_date,month_name,VARCHAR(10),Full English name of the month,Generated,Python strftime('%B'),NOT NULL,January
+dim_date,week,SMALLINT,ISO week number of the year (1–53),Generated,EXTRACT(WEEK FROM full_date),NOT NULL,3
+dim_date,is_month_end,BOOLEAN,Flag indicating whether the date is the last day of its month,Generated,1 if date == last_day_of_month(date) else 0,NOT NULL,0
+dim_customer,customer_id,VARCHAR(20),Surrogate key for the customer — matches borrower_id in fact tables,Lending Club CSV,Derived as 'BRW-' + member_id,NOT NULL — primary key,BRW-9087654
+dim_customer,customer_name,VARCHAR(100),Anonymised placeholder name (PII not stored),Synthetic / anonymised,Generated as 'Customer-' + customer_id suffix; real PII masked,NOT NULL,Customer-9087654
+dim_customer,state,CHAR(2),Two-letter US state code of the borrower's address,Lending Club CSV,Uppercase; validate against 50-state list + DC,NOT NULL — default 'XX' if missing,CA
+dim_customer,zip_code,VARCHAR(5),First 3 digits of borrower's 5-digit ZIP code (partial for privacy),Lending Club CSV,First 3 characters of zip_code field,NOT NULL — partial key retained,945
+dim_customer,credit_tier,VARCHAR(20),Broad credit quality tier derived from credit score,Derived,CASE score: Prime >= 720; Near Prime 660–719; Sub-Prime < 660,NOT NULL — derived,Prime
+dim_customer,segment,VARCHAR(30),Business segment classification for the customer,Derived from grade + annual_inc,Rule-based segmentation: Retail; SME; Premier,NOT NULL — derived,Retail
+dim_customer,acquisition_channel,VARCHAR(30),Channel through which the customer was acquired,Lending Club CSV,Direct map from application purpose and source field,NULL allowed — 'Unknown' if missing,Online Platform
+dim_customer,customer_since,DATE,Date of the customer's first loan application or account open,Lending Club CSV,earliest issue_date per member_id,NOT NULL,2016-03-01
+dim_loan,loan_id,VARCHAR(20),Surrogate key for loan — matches loan_id in fact tables,Lending Club CSV,Cast to string; strip whitespace,NOT NULL — primary key,LC-1234567
+dim_loan,loan_purpose,VARCHAR(50),Stated purpose of the loan (cleaned and standardised),Lending Club CSV,Lowercase; spaces to underscores; map to standard taxonomy,NOT NULL — default 'other',debt_consolidation
+dim_loan,loan_term,SMALLINT,Loan repayment term in months (36 or 60),Lending Club CSV,Strip ' months'; cast to INTEGER,NOT NULL,36
+dim_loan,payment_plan,VARCHAR(20),Repayment plan type (Standard / Extended / Interest-Only),Derived,Assigned based on term and loan type,NOT NULL — default 'Standard',Standard
+dim_loan,collateral_type,VARCHAR(30),Type of collateral securing the loan,Lending Club CSV,Map from loan purpose: 'None' for personal; 'Real Estate' for mortgage,NOT NULL — default 'None',None
+dim_loan,origination_channel,VARCHAR(30),Channel through which the loan was originated,Lending Club CSV,Mapped from source field: Online; Broker; Branch,NOT NULL — default 'Online',Online
+dim_loan,servicer_id,INTEGER,Identifier for the entity servicing the loan,Synthetic,Assigned sequentially during data generation,NOT NULL — default 1,1
+dim_loan,product_type,VARCHAR(30),Product type category: Personal; Auto; Mortgage; Business,Lending Club CSV,Mapped from purpose field via lookup table,NOT NULL — default 'Personal',Personal
+dim_product,product_id,INTEGER,Surrogate key for the loan product type,Reference data,Sequential integer assigned during dimension load,NOT NULL — primary key,101
+dim_product,product_name,VARCHAR(50),Human-readable product name,Reference data,Manually maintained reference table,NOT NULL,Personal Unsecured Loan
+dim_product,product_category,VARCHAR(30),High-level product category grouping,Reference data,Manually maintained reference table,NOT NULL,Consumer Lending
+dim_product,interest_type,VARCHAR(20),Interest rate basis: Fixed or Variable,Reference data,Manually maintained reference table,NOT NULL,Fixed
+dim_product,min_loan_amnt,DECIMAL(10 2),Minimum loan amount allowed for this product in USD,Reference data,Manually maintained reference table,NOT NULL,1000.00
+dim_product,max_loan_amnt,DECIMAL(10 2),Maximum loan amount allowed for this product in USD,Reference data,Manually maintained reference table,NOT NULL,40000.00
+dim_risk_band,risk_band_id,INTEGER,Surrogate key for the risk band,Reference data / scorecard config,Sequential integer; maintained in config file,NOT NULL — primary key,3
+dim_risk_band,risk_band_name,VARCHAR(30),Descriptive name of the risk band,Reference data,Manually defined: Low / Medium / High / Very High / Watch List,NOT NULL,Medium Risk
+dim_risk_band,min_score,DECIMAL(8 6),Minimum PD estimate (inclusive) for this band,scorecard config,Defined in scorecard band thresholds config,NOT NULL,0.020000
+dim_risk_band,max_score,DECIMAL(8 6),Maximum PD estimate (exclusive) for this band,scorecard config,Defined in scorecard band thresholds config,NOT NULL,0.080000
+dim_risk_band,min_pd,DECIMAL(8 6),Minimum observed historical PD within this band,Historical analysis,Computed from back-testing results,NOT NULL,0.019500
+dim_risk_band,max_pd,DECIMAL(8 6),Maximum observed historical PD within this band,Historical analysis,Computed from back-testing results,NOT NULL,0.079800
+dim_risk_band,lgd_floor,DECIMAL(6 4),Minimum Loss Given Default assumption for loans in this band,Risk policy,Defined in risk policy document,NOT NULL,0.4000
+dim_risk_band,lgd_cap,DECIMAL(6 4),Maximum Loss Given Default assumption for loans in this band,Risk policy,Defined in risk policy document,NOT NULL,0.6500
+dim_risk_band,capital_requirement,DECIMAL(6 4),Regulatory capital requirement percentage for this risk band,Basel III / internal policy,Computed from internal ICAAP model,NOT NULL,0.0850
+dim_account,account_id,INTEGER,Surrogate key for the nominal ledger account,Chart of Accounts reference,Sequential integer from chart of accounts,NOT NULL — primary key,5010
+dim_account,account_code,VARCHAR(10),Alphanumeric account code from the chart of accounts,Chart of Accounts reference,Direct copy from CoA; zero-padded to 6 digits,NOT NULL,005010
+dim_account,account_name,VARCHAR(100),Full descriptive name of the nominal account,Chart of Accounts reference,Direct copy from CoA; title case,NOT NULL,Salaries and Wages
+dim_account,account_type,VARCHAR(20),Classification: Asset; Liability; Equity; Revenue; Expense,Chart of Accounts reference,Mapped from CoA section codes,NOT NULL,Expense
+dim_account,account_category,VARCHAR(30),Sub-category within the account type (e.g. Operating Expense),Chart of Accounts reference,Mapped from CoA grouping rules,NOT NULL,Operating Expense
+dim_account,is_active,BOOLEAN,Flag indicating whether the account is currently active in the ledger,Chart of Accounts reference,1 = active; 0 = closed/archived,NOT NULL — default 1,1
+dim_account,parent_account_id,INTEGER,Self-referencing FK to parent account enabling account hierarchies,Chart of Accounts reference,NULL for top-level accounts; integer for child accounts,NULL allowed — top-level accounts have no parent,5000
+dim_department,department_id,INTEGER,Surrogate key for the department / cost centre,HR / Finance reference,Sequential integer,NOT NULL — primary key,301
+dim_department,department_name,VARCHAR(100),Full name of the department,HR / Finance reference,Direct copy; title case,NOT NULL,Credit Risk
+dim_department,cost_centre,VARCHAR(10),Cost centre code used for financial reporting,Finance reference,Alphanumeric code; direct copy from finance system,NOT NULL,CC-301
+dim_department,region,VARCHAR(30),Geographic region the department is associated with,HR / Finance reference,Mapped from office location codes,NOT NULL,North America
+dim_department,manager,VARCHAR(100),Name of the department manager (anonymised in non-prod),HR reference,Anonymised in staging; real name in curated (access-controlled),NOT NULL,J. Smith
+dim_department,budget_holder,VARCHAR(100),Name of the person responsible for the department budget,Finance reference,Direct from budget sign-off records; anonymised in non-prod,NOT NULL,A. Johnson
+dim_region,region_id,INTEGER,Surrogate key for the geographic region,Reference data,Sequential integer,NOT NULL — primary key,5
+dim_region,region_name,VARCHAR(50),Full name of the geographic region,Reference data,Manually maintained; title case,NOT NULL,Pacific West
+dim_region,country,VARCHAR(50),Country associated with the region,Reference data,ISO 3166-1 alpha-2 code expanded to full name,NOT NULL,United States
+dim_region,state,VARCHAR(30),State or province within the country,Reference data,Full state name; title case,NOT NULL,California
+dim_region,territory_manager,VARCHAR(100),Name of the regional territory manager,Reference data,Direct from organisational chart; anonymised in non-prod,NOT NULL,M. Torres

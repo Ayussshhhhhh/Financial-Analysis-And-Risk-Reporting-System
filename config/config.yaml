@@ -1,0 +1,35 @@
+project:
+  name: "Financial Analytics and Risk Reporting System"
+  version: "1.0.0"
+  start_date: "2024-01-01"
+  end_date: "2025-12-31"
+
+database:
+  type: "sqlite"
+  path: "data/curated/financial_analytics.db"
+
+data:
+  raw_path: "data/raw"
+  staging_path: "data/staging"
+  curated_path: "data/curated"
+  output_path: "data/outputs"
+
+synthetic:
+  n_months: 24
+  start_date: "2024-01-01"
+  regions: ["North", "South", "East", "West", "Central"]
+  products: ["Personal Loans", "Auto Loans", "Mortgages", "Credit Cards", "Business Loans"]
+  departments: ["Sales", "Operations", "Technology", "Finance", "Marketing", "HR", "Risk"]
+  n_loan_records: 10000
+
+model:
+  test_size: 0.3
+  random_state: 42
+  scorecard:
+    base_score: 600
+    base_odds: 50
+    pdo: 20
+
+reporting:
+  board_pack_output: "reports/monthly_board_pack"
+  financial_report_output: "reports/financial_report"

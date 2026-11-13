@@ -1,0 +1,405 @@
+metrics:
+
+  revenue:
+    business_definition: >
+      Total income generated from all lending and financial products during the reporting period,
+      including interest income, fee income, and service charges.
+    formula: "SUM(interest_income + fee_income + service_charges)"
+    data_source_fields: ["revenue", "interest_income", "fee_income"]
+    grain: "monthly, by region, product, department"
+    filter_rules:
+      - "Exclude inter-company eliminations"
+      - "Exclude refunds and reversals"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Does not include unrealized gains"
+      - "Subject to end-of-month close cutoff"
+    example_calculation: "Jan 2024 North Personal Loans Revenue = $1,250,000"
+
+  gross_profit:
+    business_definition: >
+      Revenue minus the cost of goods sold (COGS), representing the profit from core operations
+      before operating expenses.
+    formula: "revenue - cogs"
+    data_source_fields: ["revenue", "cogs"]
+    grain: "monthly, by region, product"
+    filter_rules:
+      - "COGS includes cost of funds, provisions for loan losses, and direct servicing costs"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "COGS allocation methodology may vary by product"
+    example_calculation: "Gross Profit = $1,250,000 - $450,000 = $800,000"
+
+  gross_margin:
+    business_definition: >
+      The percentage of revenue remaining after subtracting the cost of goods sold.
+      Measures operational efficiency of core business.
+    formula: "(gross_profit / revenue) * 100"
+    data_source_fields: ["gross_profit", "revenue"]
+    grain: "monthly, by region, product"
+    filter_rules:
+      - "Revenue must be non-zero to calculate margin"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Can be distorted by one-off COGS items"
+    example_calculation: "Gross Margin = ($800,000 / $1,250,000) * 100 = 64.0%"
+
+  operating_expense:
+    business_definition: >
+      All expenses incurred in the normal course of operations, excluding COGS and financing costs.
+      Includes salaries, marketing, technology, and depreciation.
+    formula: "opex_salaries + opex_marketing + opex_technology + opex_depreciation + opex_other"
+    data_source_fields: ["opex_salaries", "opex_marketing", "opex_technology", "opex_depreciation", "opex_other"]
+    grain: "monthly, by department, region"
+    filter_rules:
+      - "Exclude capital expenditures"
+      - "Exclude one-time restructuring charges (unless recurring)"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Depreciation allocation may differ from cash spend"
+    example_calculation: "Total OPEX = $200k + $80k + $120k + $30k + $50k = $480,000"
+
+  ebitda:
+    business_definition: >
+      Earnings Before Interest, Taxes, Depreciation and Amortization. A proxy for operating
+      cash flow and business profitability.
+    formula: "net_profit + interest_expense + tax + opex_depreciation"
+    data_source_fields: ["net_profit", "interest_expense", "tax", "opex_depreciation"]
+    grain: "monthly, by region, product"
+    filter_rules:
+      - "Must use net_profit before interest and tax deductions"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Does not reflect actual cash generation due to working capital changes"
+    example_calculation: "EBITDA = $120k + $40k + $35k + $30k = $225,000"
+
+  ebit:
+    business_definition: >
+      Earnings Before Interest and Taxes. Measures operational profitability excluding
+      financing structure and tax jurisdiction effects.
+    formula: "ebitda - opex_depreciation"
+    data_source_fields: ["ebitda", "opex_depreciation"]
+    grain: "monthly"
+    filter_rules:
+      - "Depreciation must be included in OPEX before EBIT is computed"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "EBIT can be negative in heavy investment periods"
+    example_calculation: "EBIT = $225,000 - $30,000 = $195,000"
+
+  net_profit:
+    business_definition: >
+      The bottom-line profit after all expenses, interest, and taxes have been deducted from revenue.
+    formula: "ebitda - opex_depreciation - interest_expense - tax"
+    data_source_fields: ["ebitda", "opex_depreciation", "interest_expense", "tax"]
+    grain: "monthly"
+    filter_rules:
+      - "Must include all statutory tax charges"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Tax figure is an estimate until finalized"
+    example_calculation: "Net Profit = $225k - $30k - $40k - $35k = $120,000"
+
+  net_margin:
+    business_definition: >
+      The percentage of revenue that becomes net profit. A key indicator of overall business
+      efficiency and profitability.
+    formula: "(net_profit / revenue) * 100"
+    data_source_fields: ["net_profit", "revenue"]
+    grain: "monthly"
+    filter_rules:
+      - "Revenue must be non-zero"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Can be distorted by extraordinary items"
+    example_calculation: "Net Margin = ($120,000 / $1,250,000) * 100 = 9.6%"
+
+  budget_variance:
+    business_definition: >
+      The difference between actual financial results and budgeted (planned) values.
+      Positive variance = favorable (better than budget), negative = unfavorable.
+    formula: "actual_value - budget_value"
+    data_source_fields: ["actual_value", "budget_value"]
+    grain: "monthly, by department, region, product"
+    filter_rules:
+      - "For revenue metrics: actual > budget is favorable"
+      - "For expense metrics: actual < budget is favorable"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Budget quality depends on planning accuracy"
+    example_calculation: "Revenue Variance = $1,250,000 - $1,200,000 = +$50,000 (Favorable)"
+
+  variance_pct:
+    business_definition: >
+      The budget variance expressed as a percentage of the budgeted value.
+    formula: "((actual_value - budget_value) / budget_value) * 100"
+    data_source_fields: ["actual_value", "budget_value"]
+    grain: "monthly, by department, region, product"
+    filter_rules:
+      - "Budget value must be non-zero"
+    refresh_frequency: "monthly"
+    owner: "Finance"
+    known_limitations:
+      - "Large percentages can be misleading when budget is near zero"
+    example_calculation: "Variance % = (($1,250k - $1,200k) / $1,200k) * 100 = 4.2%"
+
+  dti:
+    business_definition: >
+      Debt-to-Income ratio. Total monthly debt payments divided by gross monthly income.
+      A key underwriting metric for creditworthiness.
+    formula: "(total_monthly_debt_payments / gross_monthly_income) * 100"
+    data_source_fields: ["dti", "annual_inc", "loan_amnt"]
+    grain: "per loan applicant"
+    filter_rules:
+      - "Annual income must be greater than zero"
+      - "Exclude income from co-borrowers unless jointly applied"
+    refresh_frequency: "per application"
+    owner: "Risk"
+    known_limitations:
+      - "Self-reported income may not be verified"
+      - "DTI does not capture off-balance-sheet obligations"
+    example_calculation: "DTI = ($1,500 monthly debt / $5,000 monthly income) = 30%"
+
+  revolving_utilization:
+    business_definition: >
+      The percentage of revolving credit currently in use. High utilization (>30%) is
+      associated with higher credit risk.
+    formula: "(revol_bal / revol_credit_limit) * 100"
+    data_source_fields: ["revol_bal", "revol_util"]
+    grain: "per borrower"
+    filter_rules:
+      - "Credit limit must be non-zero"
+      - "Cap at 100% for data quality"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Limit data may be stale"
+    example_calculation: "Revolving Utilization = ($8,000 / $20,000) * 100 = 40%"
+
+  delinquency_rate:
+    business_definition: >
+      The percentage of loans that are past due by 30+ days. Indicates portfolio health.
+    formula: "(count_delinquent_loans / total_active_loans) * 100"
+    data_source_fields: ["delinq_2yrs", "loan_status"]
+    grain: "monthly, by product, grade"
+    filter_rules:
+      - "Only count loans in active/performing status as denominator"
+      - "Delinquency = 30+ days past due"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Early delinquency may resolve before month end"
+    example_calculation: "Delinquency Rate = (250 / 5,000) * 100 = 5.0%"
+
+  default_rate:
+    business_definition: >
+      Percentage of loans that have defaulted (Charged Off or Default status).
+      Used to assess credit quality.
+    formula: "(count_defaulted_loans / total_loans) * 100"
+    data_source_fields: ["default_flag", "loan_status"]
+    grain: "vintage cohort, grade, product"
+    filter_rules:
+      - "Default = loan_status in ('Charged Off', 'Default')"
+      - "Denominator is all originated loans in the cohort"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Recent vintages have incomplete default observation window"
+    example_calculation: "Default Rate = (120 / 1,000) * 100 = 12.0%"
+
+  probability_of_default:
+    business_definition: >
+      Model-estimated likelihood that a borrower will default within a 12-month horizon.
+      Output of the credit scorecard logistic regression model.
+    formula: "1 / (1 + exp(-log_odds))"
+    data_source_fields: ["scorecard_points", "grade", "dti", "revol_util", "loan_to_income"]
+    grain: "per loan"
+    filter_rules:
+      - "Score must be derived from validated scorecard"
+      - "PD must be between 0 and 1"
+    refresh_frequency: "per application, monthly refresh"
+    owner: "Risk"
+    known_limitations:
+      - "PD is point-in-time and may not reflect through-the-cycle risk"
+      - "Model performance degrades over time without recalibration"
+    example_calculation: "PD = 1 / (1 + exp(-(-0.5))) = 0.378 = 37.8%"
+
+  woe:
+    business_definition: >
+      Weight of Evidence. Measures the predictive strength of each bin of a feature
+      relative to the binary target (default=1).
+    formula: "ln(Distribution_Events / Distribution_Non_Events)"
+    data_source_fields: ["feature_bins", "default_flag"]
+    grain: "per feature bin"
+    filter_rules:
+      - "Both event and non-event counts must be > 0 in each bin"
+      - "Replace zero counts with 0.5 to avoid log(0)"
+    refresh_frequency: "model development/refresh cycle"
+    owner: "Risk"
+    known_limitations:
+      - "Assumes monotonic relationship for optimal performance"
+    example_calculation: "WOE(DTI 25-35) = ln(0.30 / 0.15) = 0.693"
+
+  information_value:
+    business_definition: >
+      Measures total predictive power of a feature. Sum of WOE * (Event% - Non-Event%) across all bins.
+      IV > 0.3 is considered strong predictive power.
+    formula: "SUM((pct_events - pct_non_events) * woe)"
+    data_source_fields: ["woe_table"]
+    grain: "per feature"
+    filter_rules:
+      - "IV < 0.02: Useless; 0.02-0.1: Weak; 0.1-0.3: Medium; > 0.3: Strong"
+    refresh_frequency: "model development/refresh cycle"
+    owner: "Risk"
+    known_limitations:
+      - "High IV does not guarantee model stability"
+    example_calculation: "IV(DTI) = SUM(0.05*0.3 + 0.08*0.4 + 0.12*0.5) = 0.31 (Strong)"
+
+  gini_coefficient:
+    business_definition: >
+      Model discrimination metric. Gini = 2 * AUC - 1. Ranges from 0 (no discrimination)
+      to 1 (perfect discrimination). Target > 0.4 for credit models.
+    formula: "2 * AUC - 1"
+    data_source_fields: ["pd_estimate", "default_flag"]
+    grain: "model level"
+    filter_rules:
+      - "Requires at least 100 observations with both defaults and non-defaults"
+    refresh_frequency: "quarterly model validation"
+    owner: "Risk"
+    known_limitations:
+      - "Gini is sensitive to class imbalance"
+    example_calculation: "Gini = 2 * 0.72 - 1 = 0.44"
+
+  ks_statistic:
+    business_definition: >
+      Kolmogorov-Smirnov statistic. Maximum difference between cumulative distribution
+      of defaults and non-defaults. Measures separation power of the scorecard.
+    formula: "max(|CDF_defaults(score) - CDF_non_defaults(score)|)"
+    data_source_fields: ["scorecard_points", "default_flag"]
+    grain: "model level"
+    filter_rules:
+      - "KS > 0.2 considered acceptable for credit scoring"
+    refresh_frequency: "quarterly model validation"
+    owner: "Risk"
+    known_limitations:
+      - "KS only captures the maximum difference, not overall discrimination"
+    example_calculation: "KS = max(|0.60 - 0.25|) = 0.35"
+
+  risk_band:
+    business_definition: >
+      Categorical risk classification derived from scorecard points.
+      Low (700+), Medium (600-699), High (500-599), Very High (<500).
+    formula: "CASE WHEN score >= 700 THEN 'Low' WHEN score >= 600 THEN 'Medium' WHEN score >= 500 THEN 'High' ELSE 'Very High' END"
+    data_source_fields: ["scorecard_points"]
+    grain: "per loan"
+    filter_rules:
+      - "Score must be derived from current approved scorecard version"
+    refresh_frequency: "per application"
+    owner: "Risk"
+    known_limitations:
+      - "Band thresholds are policy decisions, not statistical outputs"
+    example_calculation: "Score 625 -> Medium Risk"
+
+  expected_loss:
+    business_definition: >
+      Regulatory and economic capital metric. EL = PD * LGD * EAD. Represents the
+      average loss expected from a loan over a 12-month period.
+    formula: "pd_estimate * lgd_assumption * ead"
+    data_source_fields: ["pd_estimate", "lgd_assumption", "ead"]
+    grain: "per loan"
+    filter_rules:
+      - "LGD default assumption: 0.45 (45%) unless product-specific rate available"
+      - "EAD = outstanding principal + committed undrawn amount"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "LGD is an average estimate; actual recovery varies"
+      - "EAD does not account for pre-payment"
+    example_calculation: "EL = 0.05 * 0.45 * $10,000 = $225"
+
+  ead:
+    business_definition: >
+      Exposure at Default. The estimated outstanding balance at the time of default.
+      For term loans, typically the remaining principal balance.
+    formula: "loan_amnt * (1 - cumulative_repayment_pct)"
+    data_source_fields: ["loan_amnt", "installment", "term"]
+    grain: "per loan"
+    filter_rules:
+      - "Must reflect current outstanding balance, not original amount"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Pre-payment behavior not modeled"
+    example_calculation: "EAD = $10,000 * (1 - 0.20) = $8,000"
+
+  lgd:
+    business_definition: >
+      Loss Given Default. The percentage of EAD expected to be lost if default occurs.
+      Accounts for recoveries through collections and collateral liquidation.
+    formula: "1 - recovery_rate"
+    data_source_fields: ["loan_status", "recovered_amount", "ead"]
+    grain: "product, collateral type"
+    filter_rules:
+      - "Recovery rate based on historical collections data"
+      - "Secured loans (mortgages, auto) have lower LGD"
+    refresh_frequency: "annually or upon significant portfolio change"
+    owner: "Risk"
+    known_limitations:
+      - "Recovery depends on economic conditions and legal environment"
+    example_calculation: "LGD = 1 - 0.55 = 0.45 (45%)"
+
+  vintage:
+    business_definition: >
+      Cohort grouping of loans by their origination period (month or quarter).
+      Used to track performance of loans originated at the same time.
+    formula: "DATE_TRUNC('quarter', issue_date)"
+    data_source_fields: ["issue_d"]
+    grain: "loan cohort"
+    filter_rules:
+      - "Group by YYYY-Q format for quarterly vintages"
+    refresh_frequency: "monthly tracking of each vintage cohort"
+    owner: "Risk"
+    known_limitations:
+      - "Recent vintages have insufficient observation window for default measurement"
+    example_calculation: "Loans issued Jan-Mar 2024 = Vintage 2024-Q1"
+
+  roll_rate:
+    business_definition: >
+      The rate at which loans migrate from one delinquency bucket to the next.
+      Tracks 0-29 DPD -> 30-59 DPD -> 60-89 DPD -> 90+ DPD -> Default.
+    formula: "(count_loans_migrating_to_next_bucket / count_loans_in_current_bucket) * 100"
+    data_source_fields: ["loan_status", "delinq_2yrs", "date"]
+    grain: "monthly, by delinquency bucket"
+    filter_rules:
+      - "Track each loan's delinquency bucket month-over-month"
+      - "Cure rate = % migrating back to current"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Roll rates are lagging indicators of portfolio stress"
+    example_calculation: "30+ DPD Roll Rate = (50 loans moving to 60+ / 200 loans at 30+) = 25%"
+
+  concentration_risk:
+    business_definition: >
+      Measure of portfolio exposure concentration to a single borrower, sector, region,
+      or risk band. High concentration increases systemic risk.
+    formula: "(segment_exposure / total_portfolio_exposure) * 100"
+    data_source_fields: ["ead", "risk_band", "region", "grade", "purpose"]
+    grain: "by segment (grade, region, purpose, risk_band)"
+    filter_rules:
+      - "Flag if any single segment exceeds 25% of total portfolio"
+      - "Report top 5 segments by exposure"
+    refresh_frequency: "monthly"
+    owner: "Risk"
+    known_limitations:
+      - "Concentration across correlated segments is not automatically captured"
+    example_calculation: "Mortgage concentration = ($50M / $200M) * 100 = 25%"

@@ -1,0 +1,1680 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 5938 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+BT
+0.09 0.21 0.36 rg
+/F2 21 Tf
+48 790 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 759 Td
+(Newcomer Guide) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 729 Td
+(Purpose: Explain what the project does, how its folders fit together, how to run it, and how to interpret) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 717 Td
+(its outputs.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 698 Td
+(Current data source: Lending Club accepted-loans data from Kaggle, stored as) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 686 Td
+(data/raw/accepted_2007_to_2018Q4.csv.gz.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 667 Td
+(Last verified pipeline run: 12 November 2026) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 648 Td
+(- 2,260,701 loans ingested) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 636 Td
+(- 1,345,383 loans with resolved outcomes used for model training) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 624 Td
+(- AUC: 0.6910) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 612 Td
+(- Gini: 0.3821) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 600 Td
+(- KS: 0.2763) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 588 Td
+(- 8 of 8 pipeline quality checks passed) Tj
+ET
+0.75 0.80 0.85 RG
+48 572 m 547 572 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 550 Td
+(1. What This Project Is) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 520 Td
+(This project is a batch analytics system for a lending business. It combines two related views:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 501 Td
+(1. Financial performance: revenue, costs, profit, balance sheet, and budget variance.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 489 Td
+(2. Credit risk: borrower default probability, credit scores, risk bands, and expected loss.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 470 Td
+(The system converts raw files into cleaned data, analytical tables, statistical results, and) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 458 Td
+(business-facing reports.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 439 Td
+(It is best understood as a portfolio and demonstration system. The loan portfolio is based on historical) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 427 Td
+(public data, while the general-ledger data is synthetic because the Kaggle dataset does not contain a) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 415 Td
+(company's internal accounting records.) Tj
+ET
+0.75 0.80 0.85 RG
+48 399 m 547 399 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 377 Td
+(2. The Main Pipeline) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 347 Td
+(The executable pipeline is src/automation.py, run from the project root as a Python module:) Tj
+ET
+0.95 0.96 0.97 rg
+45 326 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 328 Td
+(Kaggle loan archive + ledger CSV) Tj
+ET
+0.95 0.96 0.97 rg
+45 316 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 318 Td
+(              |) Tj
+ET
+0.95 0.96 0.97 rg
+45 306 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 308 Td
+(              v) Tj
+ET
+0.95 0.96 0.97 rg
+45 296 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 298 Td
+(        Data ingestion) Tj
+ET
+0.95 0.96 0.97 rg
+45 286 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 288 Td
+(              |) Tj
+ET
+0.95 0.96 0.97 rg
+45 276 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 278 Td
+(              v) Tj
+ET
+0.95 0.96 0.97 rg
+45 266 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 268 Td
+(       Cleaning and staging) Tj
+ET
+0.95 0.96 0.97 rg
+45 256 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 258 Td
+(              |) Tj
+ET
+0.95 0.96 0.97 rg
+45 246 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 248 Td
+(              +----------------------+) Tj
+ET
+0.95 0.96 0.97 rg
+45 236 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 238 Td
+(              |                      |) Tj
+ET
+0.95 0.96 0.97 rg
+45 226 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 228 Td
+(              v                      v) Tj
+ET
+0.95 0.96 0.97 rg
+45 216 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 218 Td
+(     Credit feature work      Financial calculations) Tj
+ET
+0.95 0.96 0.97 rg
+45 206 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 208 Td
+(              |                      |) Tj
+ET
+0.95 0.96 0.97 rg
+45 196 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 198 Td
+(              v                      v) Tj
+ET
+0.95 0.96 0.97 rg
+45 186 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 188 Td
+(       Credit scorecard       P&L, balance sheet,) Tj
+ET
+0.95 0.96 0.97 rg
+45 176 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 178 Td
+(       PD, scores, bands      budget variance) Tj
+ET
+0.95 0.96 0.97 rg
+45 166 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 168 Td
+(              |                      |) Tj
+ET
+0.95 0.96 0.97 rg
+45 156 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 158 Td
+(              +----------+-----------+) Tj
+ET
+0.95 0.96 0.97 rg
+45 146 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 148 Td
+(                         |) Tj
+ET
+0.95 0.96 0.97 rg
+45 136 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 138 Td
+(                         v) Tj
+ET
+0.95 0.96 0.97 rg
+45 126 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 128 Td
+(             Validation and reconciliation) Tj
+ET
+0.95 0.96 0.97 rg
+45 116 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 118 Td
+(                         |) Tj
+ET
+0.95 0.96 0.97 rg
+45 106 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 108 Td
+(                         v) Tj
+ET
+0.95 0.96 0.97 rg
+45 96 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 98 Td
+(              SQLite analytical database) Tj
+ET
+0.95 0.96 0.97 rg
+45 86 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 88 Td
+(                         |) Tj
+ET
+0.95 0.96 0.97 rg
+45 76 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 78 Td
+(                         v) Tj
+ET
+0.95 0.96 0.97 rg
+45 66 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 68 Td
+(              Excel, charts, HTML, PDF) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 1) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 3742 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 790 Td
+(Running python3 src/automation.py directly is not recommended because the script imports the project as) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 778 Td
+(the src package.) Tj
+ET
+0.75 0.80 0.85 RG
+48 762 m 547 762 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 740 Td
+(3. Folder Guide) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 710 Td
+(config/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 685 Td
+(- config.yaml: paths, synthetic ledger settings, and model settings.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 673 Td
+(- metric_definitions.yaml: business definitions and formulas for governed metrics.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 654 Td
+(data/raw/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 629 Td
+(This is the input layer.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 610 Td
+(- accepted_2007_to_2018Q4.csv.gz: the Kaggle accepted-loans archive.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 598 Td
+(- ledger_raw.csv: the synthetic general-ledger input.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 586 Td
+(- loans_raw.csv: a generated normalized copy of the loan input created by ingestion.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 567 Td
+(Keep the original Kaggle archive here. The loader reads it directly and selects only the columns required) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 555 Td
+(by this project. Do not use the rejected-loans file for the current model.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 536 Td
+(data/staging/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 511 Td
+(Cleaned intermediate files:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 492 Td
+(- stg_loans.csv) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 480 Td
+(- stg_ledger.csv) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 461 Td
+(These files are useful for inspecting the exact data passed to feature engineering and financial) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 449 Td
+(calculations.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 430 Td
+(data/curated/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 405 Td
+(- financial_analytics.db: SQLite output containing loan performance, general ledger, balance sheet,) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 393 Td
+(budget variance, and risk-band tables.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 374 Td
+(data/outputs/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 349 Td
+(- roc_curve.png: model discrimination chart.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 337 Td
+(- score_distribution.png: score distributions by observed outcome.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 318 Td
+(models/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 293 Td
+(- credit_scorecard.joblib: serialized fitted scorecard.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 274 Td
+(data/reports/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 249 Td
+(Excel reports generated by the current Python pipeline:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 230 Td
+(- financial_report.xlsx) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 218 Td
+(- balance_sheet_report.xlsx) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 206 Td
+(- budget_variance_report.xlsx) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 194 Td
+(- credit_risk_summary.xlsx) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 175 Td
+(reports/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 150 Td
+(- monthly_board_pack.html) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 138 Td
+(- monthly_board_pack.pdf) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 119 Td
+(These are executive-style board-pack outputs generated by the orchestration module.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 100 Td
+(src/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 75 Td
+(The implementation layer:) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 2) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 4239 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 790 Td
+(- credit_scorecard.py: trains logistic regression, converts PD to points, assigns risk bands, and) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 778 Td
+(calculates expected loss.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 766 Td
+(- financial_calculations.py: calculates P&L, balance sheet, and budget variance metrics.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 754 Td
+(- validation.py: runs accounting, model, coverage, and expected-loss checks.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 742 Td
+(- reporting.py: generates Excel reports.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 730 Td
+(- automation.py: coordinates the full process.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 711 Td
+(tests/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 686 Td
+(Automated tests for data quality, financial calculations, and scorecard behavior.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 667 Td
+(notebooks/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 642 Td
+(Five educational and analytical notebooks covering exploration, data preparation, financial analysis,) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 630 Td
+(scorecard development, and validation.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 611 Td
+(sql/, qlik/, excel/, and power_automate/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 586 Td
+(These folders document the intended database, BI, spreadsheet, and distribution ecosystem. The active) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 574 Td
+(Python path writes a simpler pandas-derived SQLite structure directly; it does not execute every SQL) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 562 Td
+(script or deploy a live Qlik or Power Automate service.) Tj
+ET
+0.75 0.80 0.85 RG
+48 546 m 547 546 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 524 Td
+(4. Loan Data Lifecycle) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 494 Td
+(Ingestion) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 469 Td
+(The loader recognizes the Kaggle accepted archive and supports both .csv and .csv.gz files. It:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 450 Td
+(- ignores rejected-loan files;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 438 Td
+(- maps Kaggle's id column to loan_id;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 426 Td
+(- reads only the needed fields to reduce memory use;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 414 Td
+(- preserves the historical loan statuses.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 395 Td
+(Cleaning) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 370 Td
+(The cleaning layer:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 351 Td
+(- converts terms such as 36 months to numeric months;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 339 Td
+(- converts rates to numeric percentages;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 327 Td
+(- parses issue dates;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 315 Td
+(- imputes missing numeric and categorical values;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 303 Td
+(- removes duplicate loan IDs;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 291 Td
+(- derives the binary target default_flag;) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 279 Td
+(- clips configured numeric ranges.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 260 Td
+(Default-label rules:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 241 Td
+(| Status | default_flag |) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 229 Td
+(|---|---:|) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 217 Td
+(| Charged Off | 1 |) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 205 Td
+(| Default | 1 |) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 193 Td
+(| Fully Paid | 0 |) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 181 Td
+(| Current, Late, or other unresolved status | null |) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 162 Td
+(Only rows with a known default_flag are used to train the scorecard.) Tj
+ET
+0.75 0.80 0.85 RG
+48 146 m 547 146 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 124 Td
+(5. Credit-Risk Model) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 94 Td
+(The scorecard uses logistic regression with six numeric predictors:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 75 Td
+(- DTI) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 63 Td
+(- annual income) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 3) Tj
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 4191 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 790 Td
+(- revolving utilization) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 778 Td
+(- inquiries in the last six months) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 759 Td
+(The model estimates probability of default:) Tj
+ET
+0.95 0.96 0.97 rg
+45 738 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 740 Td
+(PD = probability that the loan defaults) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 723 Td
+(PD is converted into scorecard points using the standard odds relationship:) Tj
+ET
+0.95 0.96 0.97 rg
+45 702 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 704 Td
+(Score = Offset + Factor * ln\(\(1 - PD\) / PD\)) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 687 Td
+(Higher PD produces a lower score.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 668 Td
+(Expected loss is calculated as:) Tj
+ET
+0.95 0.96 0.97 rg
+45 647 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 649 Td
+(Expected Loss = PD * LGD * EAD) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 632 Td
+(Current assumptions:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 613 Td
+(- LGD: 45%) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 601 Td
+(- EAD: loan amount) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 589 Td
+(- Risk bands: Low, Medium, High, Very High) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 570 Td
+(The current verified run produced:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 551 Td
+(- AUC: 0.6910) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 539 Td
+(- Gini: 0.3821) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 527 Td
+(- KS: 0.2763) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 508 Td
+(These are useful demonstration results, but the current pipeline evaluates on the training data rather) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 496 Td
+(than a separate holdout sample. They should not be treated as production model-validation evidence.) Tj
+ET
+0.75 0.80 0.85 RG
+48 480 m 547 480 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 458 Td
+(6. Financial Analysis) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 428 Td
+(The synthetic ledger contains monthly rows across regions, products, and departments. The financial layer) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 416 Td
+(calculates:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 397 Td
+(- Revenue and COGS) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 385 Td
+(- Gross profit and gross margin) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 373 Td
+(- Operating expenses) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 361 Td
+(- EBITDA and EBIT) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 349 Td
+(- Interest expense and tax) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 337 Td
+(- Net profit and net margin) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 325 Td
+(- Budget versus actual variance) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 313 Td
+(- Favorable or unfavorable variance commentary) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 301 Td
+(- Balance-sheet totals and the accounting identity) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 282 Td
+(The accounting check is:) Tj
+ET
+0.95 0.96 0.97 rg
+45 261 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 263 Td
+(Assets = Liabilities + Equity) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 246 Td
+(The current ledger is illustrative rather than an actual ERP export.) Tj
+ET
+0.75 0.80 0.85 RG
+48 230 m 547 230 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 208 Td
+(7. Validation and Tests) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 178 Td
+(Run the tests from the project root:) Tj
+ET
+0.95 0.96 0.97 rg
+45 157 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 159 Td
+(pytest -q) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 142 Td
+(The verified suite currently contains 34 passing tests. The full pipeline also performs eight runtime) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 130 Td
+(checks covering:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 111 Td
+(- P&L gross-profit identity) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 99 Td
+(- P&L net-profit identity) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 87 Td
+(- balance-sheet balance) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 75 Td
+(- minimum AUC) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 63 Td
+(- minimum Gini) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 4) Tj
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 15 0 R >>
+endobj
+15 0 obj
+<< /Length 4152 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 790 Td
+(- complete risk-band assignment) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 778 Td
+(- expected-loss bounds) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 759 Td
+(No application errors were found in the latest verified run.) Tj
+ET
+0.75 0.80 0.85 RG
+48 743 m 547 743 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 721 Td
+(8. First-Time Setup) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 691 Td
+(1. Install Python 3.10 or later.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 679 Td
+(2. Install dependencies:) Tj
+ET
+0.95 0.96 0.97 rg
+45 658 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 660 Td
+(pip3 install -r requirements.txt) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 643 Td
+(3. Confirm the Kaggle archive exists:) Tj
+ET
+0.95 0.96 0.97 rg
+45 622 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 624 Td
+(data/raw/accepted_2007_to_2018Q4.csv.gz) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 607 Td
+(4. Run the tests:) Tj
+ET
+0.95 0.96 0.97 rg
+45 586 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 588 Td
+(pytest -q) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 571 Td
+(5. Run the pipeline:) Tj
+ET
+0.95 0.96 0.97 rg
+45 550 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 552 Td
+(python3 -m src.automation) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 535 Td
+(6. Review the generated Excel reports, charts, SQLite database, and board pack.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 516 Td
+(The pipeline can take about one minute on the full Kaggle file and requires enough memory to process) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 504 Td
+(approximately 2.26 million rows.) Tj
+ET
+0.75 0.80 0.85 RG
+48 488 m 547 488 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 466 Td
+(9. Troubleshooting) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 436 Td
+(ModuleNotFoundError: No module named 'src') Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 411 Td
+(Run the command from the project root using:) Tj
+ET
+0.95 0.96 0.97 rg
+45 390 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 392 Td
+(python3 -m src.automation) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 375 Td
+(No Kaggle file is found) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 350 Td
+(Confirm the accepted file is inside data/raw/ and is named either:) Tj
+ET
+0.95 0.96 0.97 rg
+45 329 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 331 Td
+(accepted_2007_to_2018Q4.csv.gz) Tj
+ET
+0.95 0.96 0.97 rg
+45 319 499 13 re
+f
+BT
+0.12 0.16 0.20 rg
+/F3 7.4 Tf
+48 321 Td
+(accepted_2007_to_2018Q4.csv) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 304 Td
+(The model uses fewer rows than the dataset) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 279 Td
+(This is expected. Current, late, and other unresolved statuses do not have a final default outcome and) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 267 Td
+(are excluded from model training.) Tj
+ET
+BT
+0.18 0.33 0.60 rg
+/F2 11 Tf
+48 248 Td
+(Outputs look synthetic) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 223 Td
+(The loan data is historical public data, but the general ledger is synthetic. Connect a real accounting) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 211 Td
+(or ERP source before using the financial reports for operational decisions.) Tj
+ET
+0.75 0.80 0.85 RG
+48 195 m 547 195 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 173 Td
+(10. Important Limitations) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 143 Td
+(- The Lending Club data ends in 2018.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 131 Td
+(- The general ledger is synthetic.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 119 Td
+(- The scorecard currently uses raw numeric features; WOE/IV is calculated as a diagnostic but is not) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 107 Td
+(yet used to transform the model matrix.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 95 Td
+(- Model metrics are in-sample rather than holdout metrics.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 83 Td
+(- The Python database path is simpler than the documented SQL star schema.) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 71 Td
+(- Risk-band thresholds are not fully consistent across all documentation and implementation) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 5) Tj
+ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 17 0 R >>
+endobj
+17 0 obj
+<< /Length 1151 >>
+stream
+q
+1 1 1 rg
+0 0 595 842 re
+f
+Q
+0.75 0.80 0.85 RG
+48 793 m 547 793 l S
+BT
+0.09 0.21 0.36 rg
+/F2 14 Tf
+48 771 Td
+(11. Where to Start Reading the Code) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 741 Td
+(For a fast orientation, read these files in order:) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 722 Td
+(1. README.md) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 710 Td
+(2. src/automation.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 698 Td
+(3. src/data_ingestion.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 686 Td
+(4. src/data_cleaning.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 674 Td
+(5. src/feature_engineering.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 662 Td
+(6. src/credit_scorecard.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 650 Td
+(7. src/financial_calculations.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 638 Td
+(8. src/validation.py) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 626 Td
+(9. tests/) Tj
+ET
+BT
+0.12 0.16 0.20 rg
+/F1 8.5 Tf
+48 607 Td
+(That sequence follows the data from input to business output.) Tj
+ET
+0.48 0.53 0.58 rg
+/F1 7 Tf
+BT
+48 27 Td
+(Financial Analytics and Risk Reporting System) Tj
+ET
+BT
+/F1 7 Tf 475 27 Td
+(Page 6) Tj
+ET
+endstream
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000149 00000 n 
+0000000219 00000 n 
+0000000294 00000 n 
+0000000362 00000 n 
+0000000508 00000 n 
+0000006497 00000 n 
+0000006643 00000 n 
+0000010436 00000 n 
+0000010584 00000 n 
+0000014875 00000 n 
+0000015023 00000 n 
+0000019266 00000 n 
+0000019414 00000 n 
+0000023618 00000 n 
+0000023766 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+24969
+%%EOF

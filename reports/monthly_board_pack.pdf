@@ -1,0 +1,39 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 1551 >>
+stream
+BT /F1 15 Tf 40 750 Td (EXECUTIVE MONTHLY BOARD PACK) Tj ET
+BT /F1 9 Tf 40 732 Td (Financial Analytics & Risk Reporting System - Executive Board Pack) Tj ET
+BT /F1 10 Tf 40 700 Td (Period Close: November 2026) Tj ET
+BT /F1 10 Tf 40 680 Td (--------------------------------------------------------------------------------) Tj ET
+BT /F1 10 Tf 40 660 Td (YTD Total Revenue: $2,339,522,876) Tj ET
+BT /F1 10 Tf 40 640 Td (YTD Net Profit: $432,373,860 [Margin: 18.5%]) Tj ET
+BT /F1 10 Tf 40 620 Td (Total Credit Exposure: $34,016,541,625) Tj ET
+BT /F1 10 Tf 40 600 Td (Total Expected Loss [EL]: $3,252,876,722 [Ratio: 9.56%]) Tj ET
+BT /F1 10 Tf 40 580 Td (--------------------------------------------------------------------------------) Tj ET
+BT /F1 10 Tf 40 560 Td (Scorecard Discrimination: ROC-AUC = 0.6910) Tj ET
+BT /F1 10 Tf 40 540 Td (Scorecard Gini Coefficient: 0.3821) Tj ET
+BT /F1 10 Tf 40 520 Td (Kolmogorov-Smirnov [KS]: 0.2763) Tj ET
+BT /F1 10 Tf 40 500 Td (--------------------------------------------------------------------------------) Tj ET
+BT /F1 10 Tf 40 480 Td (Portfolio Risk Band Allocations:) Tj ET
+BT /F1 10 Tf 40 460 Td (  * Low Risk: 1,396,856 loans | Exposure: $19,225,973,575 | EL: $1,138,961,880) Tj ET
+BT /F1 10 Tf 40 440 Td (  * Medium Risk: 606,328 loans | Exposure: $9,886,150,150 | EL: $1,134,557,130) Tj ET
+BT /F1 10 Tf 40 420 Td (  * High Risk: 226,415 loans | Exposure: $4,242,644,125 | EL: $791,127,782) Tj ET
+BT /F1 10 Tf 40 400 Td (  * Very High Risk: 31,102 loans | Exposure: $661,773,775 | EL: $188,229,929) Tj ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000244 00000 n 
+0000000000 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+400
+%%EOF
