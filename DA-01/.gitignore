@@ -1,0 +1,7 @@
+*.pbix
+*.bak
+*.trn
+.env
+__pycache__/
+*.py[cod]
+.DS_Store

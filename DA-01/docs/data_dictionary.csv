@@ -1,0 +1,28 @@
+Table,Field,Data type,Description,Source,Transformation,Null handling,Example,Sensitivity
+mart.DimDate,DateKey,int,Date surrogate key,AWDW DimDate,Pass through,Required,20250131,Internal
+mart.DimDate,FullDate,date,Calendar date,AWDW DimDate,Date typed,Required,2025-01-31,Internal
+mart.DimDate,CalendarYear,smallint,Calendar year,AWDW DimDate,Pass through,Required,2025,Internal
+mart.DimDate,YearMonth,char(7),Year-month label,Derived,ISO 8601 formatting,Required,2025-01,Internal
+mart.DimRegion,RegionKey,int,Curated territory surrogate key,Generated,Identity,Required,1,Internal
+mart.DimRegion,TerritoryKey,int,Source sales territory key,AWDW DimSalesTerritory,Pass through,Required,1,Internal
+mart.DimRegion,RegionName,nvarchar(50),Conformed region group label,AWDW DimSalesTerritory,Maps from SalesTerritoryGroup,Required,North America,Internal
+mart.DimRegion,CountryRegionName,nvarchar(50),Country or territory,AWDW DimSalesTerritory,Pass through,May be null,United States,Internal
+mart.DimRegion,GroupName,nvarchar(50),Conformed region group,AWDW DimSalesTerritory,Pass through,May be null,North America,Internal
+mart.DimProduct,ProductKey,int,Product key,AWDW DimProduct,Pass through,Required,310,Internal
+mart.DimProduct,ProductName,nvarchar(100),English product label,AWDW DimProduct,Selected,Required,Mountain-100,Internal
+mart.DimProduct,CategoryName,nvarchar(50),Product category,AWDW DimProduct hierarchy,Left join,May be null,Bikes,Internal
+mart.FactSalesInternet,SalesOrderNumber,nvarchar(20),Order business identifier,AWDW FactInternetSales,Pass through,Required,SO43701,Internal
+mart.FactSalesInternet,SalesOrderLineNumber,smallint,Line within order,AWDW FactInternetSales,Pass through,Required,1,Internal
+mart.FactSalesInternet,OrderDateKey,int,Order date FK,AWDW FactInternetSales,Pass through,Required,20250131,Internal
+mart.FactSalesInternet,CustomerKey,int,Customer FK,AWDW FactInternetSales,Pass through,Required,12345,Confidential
+mart.FactSalesInternet,ProductKey,int,Product FK,AWDW FactInternetSales,Pass through,Required,310,Internal
+mart.FactSalesInternet,RegionKey,int,Curated region FK,AWDW SalesTerritoryKey mapped,Lookup,Can be null for exception,1,Internal
+mart.FactSalesInternet,OrderQuantity,int,Line quantity,AWDW FactInternetSales,Pass through,Required,2,Internal
+mart.FactSalesInternet,SalesAmount,decimal(19,4),Line sales amount,AWDW FactInternetSales,Pass through,Required,3399.99,Confidential
+mart.FactSalesInternet,TotalProductCost,decimal(19,4),Line cost,AWDW FactInternetSales,Pass through,Used for gross profit,May be null,2110.50,Confidential
+mart.FactInventorySnapshot,DateKey,int,Snapshot date key,AWDW FactProductInventory,Pass through,Required,20250131,Internal
+mart.FactInventorySnapshot,ProductKey,int,Product FK,AWDW FactProductInventory,Pass through,Required,310,Internal
+mart.FactInventorySnapshot,InventoryQuantity,int,Units on hand,AWDW FactProductInventory,Pass through,Required,75,Internal
+sec.UserRegionRole,UserEmail,nvarchar(254),Principal identifier,Curated example mapping,Lowercase compare,Required,manager@example.com,Confidential
+sec.UserRegionRole,RoleName,nvarchar(40),Business access role,Governance,Controlled vocabulary,Required,RegionalManager,Confidential
+sec.UserRegionRole,RegionName,nvarchar(50),Assigned region group,Governance,Match GroupName,Null for global roles,Europe,Confidential

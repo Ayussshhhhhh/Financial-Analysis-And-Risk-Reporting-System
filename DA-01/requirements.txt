@@ -1,0 +1,3 @@
+# Core SQL/Python validation uses only the standard library.
+# Optional: required only to regenerate presentation/final_presentation.pptx
+python-pptx>=0.6.21

@@ -1,0 +1,20 @@
+{
+  "name": "pl_enterprise_bi_daily",
+  "description": "Design specification; bind linked service references and integration runtime in the target ADF instance before deployment.",
+  "parameters": {
+    "pSourceDatabase": { "type": "string", "defaultValue": "AdventureWorksDW" },
+    "pLoadMode": { "type": "string", "defaultValue": "Full" },
+    "pRunDateUtc": { "type": "string" }
+  },
+  "activities": [
+    { "name": "CopyInternetSales", "type": "Copy", "source": "AdventureWorksDW.dbo.FactInternetSales", "sink": "EnterpriseBI.stg.InternetSales", "writeBehavior": "replace/full reload" },
+    { "name": "CopyInventory", "type": "Copy", "source": "AdventureWorksDW.dbo.FactProductInventory (optional)", "sink": "EnterpriseBI.stg.InventorySnapshot", "writeBehavior": "replace/full reload" },
+    { "name": "RunQualityChecks", "type": "SqlServerStoredProcedure", "procedure": "quality-check procedure", "dependsOn": ["CopyInternetSales", "CopyInventory"] },
+    { "name": "BuildCurated", "type": "SqlServerStoredProcedure", "procedure": "mart.usp_BuildCurated", "dependsOn": ["RunQualityChecks"] },
+    { "name": "RecordSuccess", "type": "SqlServerStoredProcedure", "procedure": "audit success update", "dependsOn": ["BuildCurated"] },
+    { "name": "RecordFailureAndAlert", "type": "Failure branch", "action": "write audit failure and notify Azure Monitor action group" }
+  ],
+  "trigger": { "type": "Schedule", "frequency": "Day", "interval": 1, "timezone": "UTC", "time": "after source availability" },
+  "retry": { "count": 3, "intervalSeconds": 60, "scope": "transient connectivity errors only" },
+  "note": "This is a portable design specification, not deployable ARM JSON or evidence of a live Azure resource."
+}

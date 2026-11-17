@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="660" viewBox="0 0 1400 660" role="img" aria-labelledby="title desc">
+<title id="title">Enterprise BI reference architecture</title><desc id="desc">AdventureWorksDW flows through SQL staging, quality controls, curated facts and dimensions, Power BI semantic models, secure workspaces and user roles. Audit and monitoring observe refresh.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#168d91"/></marker></defs>
+<rect width="1400" height="660" fill="#f5f8fb"/><text x="55" y="55" font-family="Arial" font-size="28" font-weight="bold" fill="#11233b">Enterprise BI Suite | Reference architecture</text>
+<g font-family="Arial" text-anchor="middle">
+<g fill="#ffffff" stroke="#168d91" stroke-width="2">
+<rect x="45" y="150" width="185" height="115" rx="12"/><rect x="290" y="150" width="185" height="115" rx="12"/><rect x="535" y="150" width="195" height="115" rx="12"/><rect x="790" y="150" width="195" height="115" rx="12"/><rect x="1045" y="150" width="300" height="115" rx="12"/>
+<rect x="290" y="370" width="185" height="100" rx="12" fill="#e8f2f5"/><rect x="535" y="370" width="195" height="100" rx="12" fill="#e8f2f5"/><rect x="790" y="370" width="195" height="100" rx="12" fill="#e8f2f5"/><rect x="1045" y="370" width="300" height="100" rx="12" fill="#e8f2f5"/>
+</g>
+<g fill="#11233b"><text x="137" y="192" font-size="17" font-weight="bold">Source</text><text x="137" y="222" font-size="14">AdventureWorksDW</text><text x="382" y="192" font-size="17" font-weight="bold">Ingestion</text><text x="382" y="222" font-size="14">SQL Agent / ADF</text><text x="632" y="192" font-size="17" font-weight="bold">Staging + QA</text><text x="632" y="222" font-size="14">typed loads, audit</text><text x="887" y="192" font-size="17" font-weight="bold">Curated</text><text x="887" y="222" font-size="14">facts + dimensions</text><text x="1195" y="192" font-size="17" font-weight="bold">Semantic models</text><text x="1195" y="222" font-size="14">Power Query + DAX</text>
+<text x="382" y="410" font-size="16" font-weight="bold">Security map</text><text x="382" y="440" font-size="13">principal / role / region</text><text x="632" y="410" font-size="16" font-weight="bold">Regional RLS</text><text x="632" y="440" font-size="13">user mapped to region</text><text x="887" y="410" font-size="16" font-weight="bold">Power BI Service</text><text x="887" y="440" font-size="13">workspace + refresh</text><text x="1195" y="410" font-size="16" font-weight="bold">Users</text><text x="1195" y="440" font-size="13">CEO, region, domain</text></g>
+</g>
+<g stroke="#168d91" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M230 207 H282"/><path d="M475 207 H527"/><path d="M730 207 H782"/><path d="M985 207 H1037"/><path d="M1195 265 V360"/><path d="M985 420 H1037"/><path d="M730 420 H782"/><path d="M475 420 H527"/><path d="M382 370 V280 Q382 280 1195 280"/></g>
+<text x="55" y="550" font-family="Arial" font-size="15" fill="#43566a">Refresh: schedule → stage → validate → curate → semantic refresh → audit and alert</text>
+<text x="55" y="585" font-family="Arial" font-size="13" fill="#43566a">Separate domain workspaces provide table-level boundaries; row-level security scopes regional data.</text>
+</svg>
