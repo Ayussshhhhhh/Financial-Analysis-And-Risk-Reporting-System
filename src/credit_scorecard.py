@@ -20,6 +20,11 @@ import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple, Union
 import joblib
+import matplotlib
+
+# The analytics pipeline is a batch process and should never initialize a GUI
+# backend (which can abort on headless or remote macOS sessions).
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd

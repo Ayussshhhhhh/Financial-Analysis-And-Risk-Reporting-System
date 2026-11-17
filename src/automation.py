@@ -20,6 +20,7 @@ import sys
 import json
 import logging
 import sqlite3
+import gc
 from datetime import datetime
 from typing import Any, Dict, Optional
 import numpy as np
@@ -114,6 +115,14 @@ def run_full_pipeline() -> Dict[str, Any]:
     eval_results = scorecard.evaluate(X_train_df, y_train)
     logger.info("Scorecard Model Eval: AUC=%.4f, Gini=%.4f, KS=%.4f",
                 eval_results["roc_auc"], eval_results["gini"], eval_results["ks_statistic"])
+    chart_sample = df_model_ready[
+        candidate_features + ["default_flag"]
+    ].sample(n=min(50_000, len(df_model_ready)), random_state=42)
+    chart_X = chart_sample[candidate_features].fillna(
+        df_model_ready[candidate_features].median()
+    )
+    chart_y = chart_sample["default_flag"].astype(int)
+    del chart_sample
 
     # Step 4: Financial Calculations
     logger.info("Step 4: Performing P&L, Balance Sheet, and Variance computations...")
@@ -171,6 +180,20 @@ def run_full_pipeline() -> Dict[str, Any]:
     conn.close()
     logger.info("SQLite database populated at %s", db_path)
 
+    loan_summary = {
+        "total_loans": len(df_loans_feat),
+        "total_exposure": df_loans_feat["loan_amnt"].sum(),
+        "total_expected_loss": df_loans_feat["expected_loss"].sum(),
+        "overall_default_rate": df_loans_feat["default_flag"].mean(),
+        "risk_band_counts": df_loans_feat["risk_band"].value_counts().to_dict(),
+        "risk_band_exposure": df_loans_feat.groupby("risk_band")["loan_amnt"].sum().to_dict(),
+        "risk_band_el": df_loans_feat.groupby("risk_band")["expected_loss"].sum().to_dict(),
+    }
+    del df_loans_raw, df_loans_clean, df_model_ready, X_train_df, y_train
+    del X_full_df, pd_estimates, scores, risk_bands, ead_estimates, expected_losses
+    del df_loans_feat
+    gc.collect()
+
     # Step 7: Reports Generation
     logger.info("Step 7: Generating Excel financial reports...")
     out_dir = get_output_path()
@@ -183,16 +206,24 @@ def run_full_pipeline() -> Dict[str, Any]:
     generate_budget_variance_report(df_variance, os.path.join(rep_dir, "budget_variance_report.xlsx"))
     generate_credit_risk_report(eval_results, os.path.join(rep_dir, "credit_risk_summary.xlsx"))
 
-    # Generate charts
-    train_scores = scorecard.calculate_score_from_pd(scorecard.predict_proba(X_train_df))
-    scorecard.plot_roc_curve(X_train_df, y_train, save_path=os.path.join(out_dir, "roc_curve.png"))
-    scorecard.plot_score_distribution(train_scores, y_true=y_train.values, save_path=os.path.join(out_dir, "score_distribution.png"))
+    # ROC construction allocates arrays proportional to the number of
+    # observations, so use the reproducible sample prepared above.
+    chart_scores = scorecard.calculate_score_from_pd(scorecard.predict_proba(chart_X))
+    scorecard.plot_roc_curve(
+        chart_X, chart_y, save_path=os.path.join(out_dir, "roc_curve.png")
+    )
+    scorecard.plot_score_distribution(
+        chart_scores, y_true=chart_y.values,
+        save_path=os.path.join(out_dir, "score_distribution.png")
+    )
 
     # Save model artifact
     scorecard.save_model("models/credit_scorecard.joblib")
 
     # Step 8: PDF / HTML Board Pack Generation
-    board_pack_path = generate_board_pack_html_and_pdf(df_pnl, df_bs, df_variance, eval_results, df_loans_feat)
+    board_pack_path = generate_board_pack_html_and_pdf(
+        df_pnl, df_bs, df_variance, eval_results, loan_summary
+    )
 
     end_time = datetime.now()
     duration_sec = (end_time - start_time).total_seconds()
@@ -202,7 +233,7 @@ def run_full_pipeline() -> Dict[str, Any]:
         "status": "SUCCESS",
         "duration_seconds": duration_sec,
         "records_processed": {
-            "loans": len(df_loans_clean),
+            "loans": loan_summary["total_loans"],
             "ledger_months": len(df_pnl)
         },
         "scorecard_metrics": eval_results,
@@ -223,7 +254,7 @@ def generate_board_pack_html_and_pdf(
     bs_df: pd.DataFrame,
     variance_df: pd.DataFrame,
     eval_metrics: Dict[str, Any],
-    loans_df: pd.DataFrame
+    loans_summary: Dict[str, Any]
 ) -> str:
     """Generate professional Board Pack HTML and PDF deliverable."""
     rep_dir = "reports"
@@ -235,13 +266,13 @@ def generate_board_pack_html_and_pdf(
     latest_pnl = pnl_df.iloc[-1]
     ytd_revenue = pnl_df["revenue"].sum()
     ytd_net_profit = pnl_df["net_profit"].sum()
-    total_exposure = loans_df["loan_amnt"].sum()
-    total_expected_loss = loans_df["expected_loss"].sum()
-    overall_default_rate = loans_df["default_flag"].mean() if "default_flag" in loans_df.columns else 0.12
+    total_exposure = loans_summary["total_exposure"]
+    total_expected_loss = loans_summary["total_expected_loss"]
+    overall_default_rate = loans_summary["overall_default_rate"]
 
-    risk_band_counts = loans_df["risk_band"].value_counts().to_dict()
-    risk_band_exposure = loans_df.groupby("risk_band")["loan_amnt"].sum().to_dict()
-    risk_band_el = loans_df.groupby("risk_band")["expected_loss"].sum().to_dict()
+    risk_band_counts = loans_summary["risk_band_counts"]
+    risk_band_exposure = loans_summary["risk_band_exposure"]
+    risk_band_el = loans_summary["risk_band_el"]
 
     html_content = f"""<!DOCTYPE html>
 <html>
@@ -486,7 +517,7 @@ startxref
         "--------------------------------------------------------------------------------",
         f"Model: Logistic Regression on WOE Binned Predictors",
         f"Target: Binary Default (Charged Off / Default vs. Fully Paid)",
-        f"Evaluation Sample: {len(loans_df):,} total loans analyzed",
+        f"Evaluation Sample: {loans_summary['total_loans']:,} total loans analyzed",
         f"ROC-AUC: {eval_metrics.get('roc_auc', 0.72):.4f} (Benchmark: >= 0.65 PASSED)",
         f"Gini Coefficient: {eval_metrics.get('gini', 0.44):.4f} (Benchmark: >= 0.30 PASSED)",
         f"Kolmogorov-Smirnov (KS): {eval_metrics.get('ks_statistic', 0.35):.4f} (Benchmark: >= 0.25 PASSED)",
